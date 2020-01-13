@@ -1,9 +1,27 @@
-ShipIt Inventory Management
-===========================
+# ShipIt Inventory Management
 
 Copyright 2010.
 
 # Setup Instructions
+
+## Software Requirement
+
+To run the software you will need:
+
+- Visual Studio 2017 or 2019 for development
+- PG Admin 4 for the database
+- AWS Elastic Beanstalk For deployment
+
+## Setting up the database
+
+To set up the database you will PG Admin 4 running. In PG Admin 4:
+
+- Create a new user for the database, For this "postgres" is used as a superuser
+- Create two new databases. One is for production called "ShipIt" and another
+  to run the unit tests called "ShipItTest"
+- Included in the root file is "ShipItBackup". For both databases, Right click > Restore
+  and find the backup file, then click the Restore Button. After a small wait the database should
+  have the contents of the backup. Do this for both databases
 
 ## Running the application
 
@@ -11,28 +29,29 @@ Copyright 2010.
 
 To run the app via Visual Studio:
 
-* Open the `ShipIt.sln` solution by going to `File` -> `Open` -> `Project/Solution`
-* Add a connections.config to both the ShipIt and ShipItTest projects, adding a connection string to each e.g.
+- Open the `ShipIt.sln` solution by going to `File` -> `Open` -> `Project/Solution`
+- Add a connections.config to both the ShipIt and ShipItTest projects, adding a connection string to each e.g.
 
 ```
 <connectionStrings>
-  <add name="MyPostgres" providerName="System.Data.SqlClient" connectionString="Server=127.0.0.1;Port=5432;Database=ShipItTest;User Id=postgres; Password=password;" />
+  <add name="MyPostgres" providerName="System.Data.SqlClient" connectionString="Server=127.0.0.1;Port=5432;Database=<YourDatabaseName>;User Id=<UserInDatabase>; Password=<passwordOfUser>;" />
 </connectionStrings>
 ```
 
-* Ensure that the main and test connection strings point to different databases
+- Ensure that the main and test connection strings point to different databases
+- In Visual Studio, right click the file > properties, find the property "Copy to Outut Dir" and change it to "Copy Always"
 
 ### On AWS Elastic Beanstalk
 
 To update a running [AWS Elastic Beanstalk](https://aws.amazon.com/elasticbeanstalk/) instance:
 
-* Install [AWS Toolkit for Visual Studio](https://aws.amazon.com/visualstudio/)
-* Open the Warehouses-CSharp project in Visual Studio and add your AWS credentials to the AWS Toolkit
-* Right click on the ShipIt project and select Publish to AWS
-* Select the region your prod environment is running on and redeploy to that environment
+- Install [AWS Toolkit for Visual Studio](https://aws.amazon.com/visualstudio/)
+- Open the Warehouses-CSharp project in Visual Studio and add your AWS credentials to the AWS Toolkit
+- Right click on the ShipIt project and select Publish to AWS
+- Select the region your prod environment is running on and redeploy to that environment
 
-To check the logs:  From the AWS console, go to `Services` -> `Elastic Beanstalk`, and
-choose your instance from the dashboard.   Click `Logs` on the left, then `Request Logs`.
+To check the logs: From the AWS console, go to `Services` -> `Elastic Beanstalk`, and
+choose your instance from the dashboard. Click `Logs` on the left, then `Request Logs`.
 
 In the unlikely event that you need to change any of the injected configuration, for
 example the database connection string or password, then these are available under
@@ -40,7 +59,7 @@ example the database connection string or password, then these are available und
 
 Information on the CPU utilisation, and network utilisation is available under `Monitoring`,
 it may also be interesting to look at the utilisation or logs of the PostgreSQL database instance
-which backs this application.  These are available under `Services` -> `RDS` -> `Databases`
+which backs this application. These are available under `Services` -> `RDS` -> `Databases`
 -> `shipit`.
 
 ## Unit Tests
@@ -50,5 +69,5 @@ choosing "Run Tests".
 
 Due to the "age" of the codebase, the unit tests rely on a connection to the database.
 Therefore you will need to ensure that you have a database setup whose schema matches
-the production database.  This database can be local or remote.  The details of this
+the production database. This database can be local or remote. The details of this
 database are set in the test project's connections.config file that you should have created earlier.
