@@ -14,14 +14,14 @@ To run the software you will need:
 
 ## Setting up the database
 
-To set up the database you will PG Admin 4 running. In PG Admin 4:
+To set up the database you will need PG Admin 4 running. In PG Admin 4:
 
-- Create a new user for the database, For this "postgres" is used as a superuser
+- Create a new user for the database, For this `postgres` is used as a superuser
 - Create two new databases. One is for production called "ShipIt" and another
-  to run the unit tests called "ShipItTest"
-- Included in the root file is "ShipItBackup". For both databases, Right click > Restore
-  and find the backup file, then click the Restore Button. After a small wait the database should
-  have the contents of the backup. Do this for both databases
+  to run the unit tests called `ShipItTest`
+- Included in the root file is `ShipItBackup`. For both databases, Right click > Restore
+  and find the backup file ( you might need to find by all file formats), then click the Restore Button. After a small wait the database should
+  have the contents of the backup. Do this for both databases.
 
 ## Running the application
 
