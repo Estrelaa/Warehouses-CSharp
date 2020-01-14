@@ -150,6 +150,7 @@
     </Compile>
     <Compile Include="Models\ApiModels\Product.cs" />
     <Compile Include="Models\ApiModels\RemoveEmployeeRequest.cs" />
+    <Compile Include="Models\ApiModels\RestockModel.cs" />
     <Compile Include="Models\ApiModels\StockAlteration.cs" />
     <Compile Include="Models\DataModels\CompanyDataModel.cs" />
     <Compile Include="Models\DataModels\EmployeeDataModel.cs" />
