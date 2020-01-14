@@ -92,7 +92,7 @@ namespace ShipIt.Controllers
             {
                 throw new InsufficientStockException(string.Join("; ", errors));
             }
-
+            
             stockRepository.RemoveStock(request.WarehouseId, lineItems);
         }
     }
