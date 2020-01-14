@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
 using System.Web;
+using ShipIt.Startup;
 
 namespace ShipIt.Repositories
 {
@@ -12,6 +13,7 @@ namespace ShipIt.Repositories
         public static string GetConnectionString()
         {
             var dbname = ConfigurationManager.AppSettings["RDS_DB_NAME"];
+            App_wide_Variables.counterForSQL++;
 
             if (dbname == null)
             {

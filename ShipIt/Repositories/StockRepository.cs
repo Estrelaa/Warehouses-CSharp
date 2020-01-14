@@ -17,6 +17,7 @@ namespace ShipIt.Repositories
         Dictionary<int, StockDataModel> GetStockByWarehouseAndProductIds(int warehouseId, List<int> productIds);
         void RemoveStock(int warehouseId, List<StockAlteration> lineItems);
         void AddStock(int warehouseId, List<StockAlteration> lineItems);
+        List<RestockingDataModel> GetAllStockThatNeedRestocking(int warehouseID);
     }
 
     public class StockRepository : RepositoryBase, IStockRepository
@@ -36,7 +37,7 @@ namespace ShipIt.Repositories
 
         public IEnumerable<StockDataModel> GetStockByWarehouseId(int id)
         {
-            string sql = "SELECT p_id, hld, w_id FROM stock WHERE w_id = @w_id";
+            string sql = "SELECT * FROM stock WHERE w_id = @w_id";
             var parameter = new NpgsqlParameter("@w_id", id);
             string noProductWithIdErrorMessage = string.Format("No stock found with w_id: {0}", id);
             try
@@ -117,6 +118,37 @@ namespace ShipIt.Repositories
             }
 
             base.RunTransaction(sql, parametersList);
+        }
+        public IEnumerable<StockDataModel> GetStock()
+        {
+            string sql = "SELECT * FROM stock WHERE w_id = @w_id";
+            string noProduct = string.Format("No stock found");
+            try
+            {
+                return base.RunGetQuery(sql, reader => new StockDataModel(reader), noProduct).ToList();
+            }
+            catch (NoSuchEntityException)
+            {
+                return new List<StockDataModel>();
+            }
+
+        }
+        public List<RestockingDataModel> GetAllStockThatNeedRestocking(int warehouseID)
+        {
+            string sql = string.Format("SELECT * FROM stock " +
+                        "JOIN gtin ON gtin.p_id = stock.p_id AND stock.hld < gtin.l_th AND NOT gtin.ds = 1 " +
+                        "JOIN gcp ON gtin.gcp_cd = gcp.gcp_cd " +
+                        "where stock.w_id = {0}", warehouseID);
+            string Failed = string.Format("Failed to get all stock that needs restocking!");
+
+            try
+            {
+                return RunGetQuery(sql, reader => new RestockingDataModel(reader), Failed).ToList();
+            }
+            catch (NoSuchEntityException)
+            {
+                return new List<RestockingDataModel>();
+            }
         }
     }
 }

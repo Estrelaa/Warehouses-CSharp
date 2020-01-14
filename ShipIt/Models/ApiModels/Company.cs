@@ -1,5 +1,6 @@
 ﻿using ShipIt.Models.DataModels;
 using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace ShipIt.Models.ApiModels
@@ -28,7 +29,6 @@ namespace ShipIt.Models.ApiModels
             Tel = dataModel.Tel;
             Mail = dataModel.Mail;
         }
-
         //Empty constructor needed for Xml serialization
         public Company()
         {

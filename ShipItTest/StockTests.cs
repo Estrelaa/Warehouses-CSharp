@@ -7,6 +7,7 @@ using ShipIt.Models.ApiModels;
 using ShipIt.Models.DataModels;
 using ShipIt.Repositories;
 using ShipItTest.Builders;
+using ShipIt.Startup;
 
 namespace ShipItTest
 {
@@ -48,7 +49,9 @@ namespace ShipItTest
             stockRepository.AddStock(1, new List<StockAlteration>() { new StockAlteration(productId, 5) });
 
             var databaseStock = stockRepository.GetStockByWarehouseAndProductIds(1, new List<int>() { productId });
+            var i = App_wide_Variables.counterForSQL; 
             Assert.AreEqual(databaseStock[productId].held, 7);
+            
         }
     }
 }

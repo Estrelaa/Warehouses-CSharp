@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using Npgsql;
 using ShipIt.Models.ApiModels;
+using ShipIt.Startup;
 
 namespace ShipIt.Models.DataModels
 {

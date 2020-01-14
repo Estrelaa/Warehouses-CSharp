@@ -156,6 +156,7 @@
     <Compile Include="Models\DataModels\ProductDataModel.cs" />
     <Compile Include="Models\ApiModels\ErrorResponse.cs" />
     <Compile Include="Models\ApiModels\Response.cs" />
+    <Compile Include="Models\DataModels\RestockingDataModel.cs" />
     <Compile Include="Models\DataModels\StockDataModel.cs" />
     <Compile Include="Parsers\EmployeeParser.cs" />
     <Compile Include="Parsers\ProductParser.cs" />
@@ -167,6 +168,7 @@
     <Compile Include="Repositories\RepositoryBase.cs" />
     <Compile Include="Repositories\StockRepository.cs" />
     <Compile Include="Repositories\ProductRepository.cs" />
+    <Compile Include="Startup\App-wide-Variables.cs" />
     <Compile Include="Startup\WindsorCompositionRoot.cs" />
     <Compile Include="Controllers\StatusController.cs" />
     <Compile Include="Validators\BaseValidator.cs" />
