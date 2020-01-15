@@ -205,8 +205,13 @@ namespace ShipItTest
         [TestMethod]
         public void TestOutboundOrderTrucksweightLessThanMax()
         {
+            // ARRANGE
             onSetUp();
-            stockRepository.AddStock(WAREHOUSE_ID, new List<StockAlteration>() { new StockAlteration(productId, 10) });
+            var productA = new ProductBuilder().setGtin("0001").CreateProductDatabaseModel();
+            productRepository.AddProducts(new List<ProductDataModel>() { productA });
+            var productAID = new Product(productRepository.GetProductByGtin("0001")).Id;
+            stockRepository.AddStock(WAREHOUSE_ID, new List<StockAlteration>() { new StockAlteration(productAID, 2000) });
+
             var outboundOrder = new OutboundOrderRequestModel()
             {
                 WarehouseId = WAREHOUSE_ID,
@@ -214,17 +219,30 @@ namespace ShipItTest
                 {
                     new OrderLine()
                     {
-                        gtin = GTIN,
-                        quantity = 3
-                    }
+                        gtin = "0001",
+                        quantity = 1999
+                    },
                 }
             };
+
+            // ACT
+            var trucks = outboundOrderController.Truck(outboundOrder);
+
+            // ASSERT
+            Assert.AreEqual(1, trucks.Count);
+            Assert.AreEqual(1999, trucks[0].Products.Count);
+            Assert.AreEqual(1999000, trucks[0].WeightInGrams);
         }
         [TestMethod]
         public void TestOutboundOrderTrucksContainItemsWePutInThem()
         {
+            // ARRANGE
             onSetUp();
-            stockRepository.AddStock(WAREHOUSE_ID, new List<StockAlteration>() { new StockAlteration(productId, 10) });
+            var productA = new ProductBuilder().setGtin("0001").CreateProductDatabaseModel();
+            productRepository.AddProducts(new List<ProductDataModel>() { productA });
+            var productAID = new Product(productRepository.GetProductByGtin("0001")).Id;
+            stockRepository.AddStock(WAREHOUSE_ID, new List<StockAlteration>() { new StockAlteration(productAID, 2000) });
+
             var outboundOrder = new OutboundOrderRequestModel()
             {
                 WarehouseId = WAREHOUSE_ID,
@@ -232,17 +250,30 @@ namespace ShipItTest
                 {
                     new OrderLine()
                     {
-                        gtin = GTIN,
-                        quantity = 3
-                    }
+                        gtin = "0001",
+                        quantity = 1000
+                    },
                 }
             };
+
+            // ACT
+            var trucks = outboundOrderController.Truck(outboundOrder);
+
+            // ASSERT
+            Assert.AreEqual(1000, trucks[0].Products.Count);
         }
         [TestMethod]
         public void TestOutboundOrderTrucksMakeSureProductsStayWithEachOther()
         {
+            // ARRANGE
             onSetUp();
-            stockRepository.AddStock(WAREHOUSE_ID, new List<StockAlteration>() { new StockAlteration(productId, 10) });
+            var productA = new ProductBuilder().setGtin("0001").CreateProductDatabaseModel();
+            var productB = new ProductBuilder().setGtin("0002").CreateProductDatabaseModel();
+            productRepository.AddProducts(new List<ProductDataModel>() { productA, productB });
+            var productAID = new Product(productRepository.GetProductByGtin("0001")).Id;
+            var productBID = new Product(productRepository.GetProductByGtin("0002")).Id;
+            stockRepository.AddStock(WAREHOUSE_ID, new List<StockAlteration>() { new StockAlteration(productAID, 2000), new StockAlteration(productBID, 1000) });
+
             var outboundOrder = new OutboundOrderRequestModel()
             {
                 WarehouseId = WAREHOUSE_ID,
@@ -250,17 +281,37 @@ namespace ShipItTest
                 {
                     new OrderLine()
                     {
-                        gtin = GTIN,
-                        quantity = 3
-                    }
+                        gtin = "0001",
+                        quantity = 1000
+                    },
+                    new OrderLine()
+                    {
+                        gtin = "0002",
+                        quantity = 2000
+                    },
                 }
             };
+
+            // ACT
+            var trucks = outboundOrderController.Truck(outboundOrder);
+
+            // ASSERT
+            Assert.AreEqual(2, trucks.Count);
+            Assert.AreEqual(1000, trucks[0].Products.Count);
+            Assert.AreEqual(2000, trucks[1].Products.Count);
         }
         [TestMethod]
         public void TestOutboundOrderTruckFullOfSameProductAddingMoreAddsToAnotherTruck()
         {
+            // ARRANGE
             onSetUp();
-            stockRepository.AddStock(WAREHOUSE_ID, new List<StockAlteration>() { new StockAlteration(productId, 10) });
+            var productA = new ProductBuilder().setGtin("0001").CreateProductDatabaseModel();
+            var productB = new ProductBuilder().setGtin("0002").CreateProductDatabaseModel();
+            productRepository.AddProducts(new List<ProductDataModel>() { productA, productB });
+            var productAID = new Product(productRepository.GetProductByGtin("0001")).Id;
+            var productBID = new Product(productRepository.GetProductByGtin("0002")).Id;
+            stockRepository.AddStock(WAREHOUSE_ID, new List<StockAlteration>() { new StockAlteration(productAID, 2000), new StockAlteration(productBID, 1000) });
+
             var outboundOrder = new OutboundOrderRequestModel()
             {
                 WarehouseId = WAREHOUSE_ID,
@@ -268,11 +319,24 @@ namespace ShipItTest
                 {
                     new OrderLine()
                     {
-                        gtin = GTIN,
-                        quantity = 3
-                    }
+                        gtin = "0001",
+                        quantity = 2000
+                    },
+                    new OrderLine()
+                    {
+                        gtin = "0002",
+                        quantity = 1000
+                    },
                 }
             };
+
+            // ACT
+            var trucks = outboundOrderController.Truck(outboundOrder);
+
+            // ASSERT
+            Assert.AreEqual(2, trucks.Count);
+            Assert.AreEqual(2000, trucks[0].Products.Count);
+            Assert.AreEqual(1000, trucks[1].Products.Count);
         }
     }
 }

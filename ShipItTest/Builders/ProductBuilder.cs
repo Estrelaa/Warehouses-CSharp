@@ -13,7 +13,7 @@ namespace ShipItTest.Builders
         private string Gtin = "0099346374235";
         private string Gcp = "0000346";
         private string Name = "2 Count 1 T30 Torx Bit Tips TX";
-        private float Weight = 300.0f;
+        private float Weight = 1000.0f;
         private int LowerThreshold = 322;
         private int Discontinued = 0;
         private int MinimumOrderQuantity = 108;
