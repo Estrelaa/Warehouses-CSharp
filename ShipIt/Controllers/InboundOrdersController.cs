@@ -42,8 +42,9 @@ namespace ShipIt.Controllers
 
             Dictionary<Company, List<InboundOrderLine>> orderlinesByCompany = new Dictionary<Company, List<InboundOrderLine>>();
 
-            foreach (var stock in LowStock)
+            for (int i = 0; i < LowStock.Count; i++)
             {
+                RestockingDataModel stock = LowStock[i];
                 // get the company that makes the item
                 Company company = MakeComp(stock);
 
