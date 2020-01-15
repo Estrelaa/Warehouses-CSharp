@@ -202,5 +202,77 @@ namespace ShipItTest
                 Assert.IsTrue(e.Message.Contains(GTIN));
             }
         }
+        [TestMethod]
+        public void TestOutboundOrderTrucksweightLessThanMax()
+        {
+            onSetUp();
+            stockRepository.AddStock(WAREHOUSE_ID, new List<StockAlteration>() { new StockAlteration(productId, 10) });
+            var outboundOrder = new OutboundOrderRequestModel()
+            {
+                WarehouseId = WAREHOUSE_ID,
+                OrderLines = new List<OrderLine>()
+                {
+                    new OrderLine()
+                    {
+                        gtin = GTIN,
+                        quantity = 3
+                    }
+                }
+            };
+        }
+        [TestMethod]
+        public void TestOutboundOrderTrucksContainItemsWePutInThem()
+        {
+            onSetUp();
+            stockRepository.AddStock(WAREHOUSE_ID, new List<StockAlteration>() { new StockAlteration(productId, 10) });
+            var outboundOrder = new OutboundOrderRequestModel()
+            {
+                WarehouseId = WAREHOUSE_ID,
+                OrderLines = new List<OrderLine>()
+                {
+                    new OrderLine()
+                    {
+                        gtin = GTIN,
+                        quantity = 3
+                    }
+                }
+            };
+        }
+        [TestMethod]
+        public void TestOutboundOrderTrucksMakeSureProductsStayWithEachOther()
+        {
+            onSetUp();
+            stockRepository.AddStock(WAREHOUSE_ID, new List<StockAlteration>() { new StockAlteration(productId, 10) });
+            var outboundOrder = new OutboundOrderRequestModel()
+            {
+                WarehouseId = WAREHOUSE_ID,
+                OrderLines = new List<OrderLine>()
+                {
+                    new OrderLine()
+                    {
+                        gtin = GTIN,
+                        quantity = 3
+                    }
+                }
+            };
+        }
+        [TestMethod]
+        public void TestOutboundOrderTruckFullOfSameProductAddingMoreAddsToAnotherTruck()
+        {
+            onSetUp();
+            stockRepository.AddStock(WAREHOUSE_ID, new List<StockAlteration>() { new StockAlteration(productId, 10) });
+            var outboundOrder = new OutboundOrderRequestModel()
+            {
+                WarehouseId = WAREHOUSE_ID,
+                OrderLines = new List<OrderLine>()
+                {
+                    new OrderLine()
+                    {
+                        gtin = GTIN,
+                        quantity = 3
+                    }
+                }
+            };
+        }
     }
 }
