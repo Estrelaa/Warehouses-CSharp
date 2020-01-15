@@ -29,15 +29,12 @@ namespace ShipIt.Controllers
         // GET api/status/{warehouseId}
         public InboundOrderResponse Get(int warehouseId)
         {
-
             log.Info("orderIn for warehouseId: " + warehouseId);
 
-            // find the operations manager of the warehouse 
             var operationsManager = new Employee(employeeRepository.GetOperationsManager(warehouseId));
 
             log.Debug(String.Format("Found operations manager: {0}", operationsManager));
 
-            //Gets all the stock accross all the warehouses 
             var LowStock = stockRepository.GetAllStockThatNeedRestocking(warehouseId);
 
             Dictionary<Company, List<InboundOrderLine>> orderlinesByCompany = new Dictionary<Company, List<InboundOrderLine>>();
@@ -57,43 +54,13 @@ namespace ShipIt.Controllers
 
             log.Debug(String.Format("Constructed order lines: {0}", orderlinesByCompany));
 
-            IEnumerable<OrderSegment> orderSegments = Sort(orderlinesByCompany);
+            var orderSegments = Sort(orderlinesByCompany);
 
             log.Info("Constructed inbound order");
 
             // return the order with right informaton
-            return new InboundOrderResponse()
-            {
-                OperationsManager = operationsManager,
-                WarehouseId = warehouseId,
-                OrderSegments = orderSegments.ToList()
-            };
+            return CreateOrderResponse(warehouseId, operationsManager, orderSegments);
         }
-
-        private static IEnumerable<OrderSegment> Sort(Dictionary<Company, List<InboundOrderLine>> orderlinesByCompany)
-        {
-            return orderlinesByCompany.Select(ol => new OrderSegment()
-            {
-                OrderLines = ol.Value,
-                Company = ol.Key
-            });
-        }
-
-        private static void CreateOrder(Dictionary<Company, List<InboundOrderLine>> orderlinesByCompany, RestockingDataModel stock, Company company)
-        {
-            // decide how many items to order 
-            var orderQuantity = Math.Max(stock.LowerThreshold * 3 - stock.Held, stock.MinimumOrderQuantity);
-
-            //put a new order in the dict
-            orderlinesByCompany[company].Add(
-                new InboundOrderLine()
-                {
-                    gtin = stock.ProductNumber,
-                    name = stock.ProductName,
-                    quantity = orderQuantity
-                });
-        }
-
         private static Company CreateCompanyDataModelNeededForOrder(RestockingDataModel stock)
         {
             Company company = new Company();
@@ -110,7 +77,37 @@ namespace ShipIt.Controllers
             company.Mail = stock.Mail;
             return company;
         }
+        private static void CreateOrder(Dictionary<Company, List<InboundOrderLine>> orderlinesByCompany, RestockingDataModel stock, Company company)
+        {
+            // decide how many items to order 
+            var orderQuantity = Math.Max(stock.LowerThreshold * 3 - stock.Held, stock.MinimumOrderQuantity);
 
+            //put a new order in the dict
+            orderlinesByCompany[company].Add(
+                new InboundOrderLine()
+                {
+                    gtin = stock.ProductNumber,
+                    name = stock.ProductName,
+                    quantity = orderQuantity
+                });
+        }
+        private static IEnumerable<OrderSegment> Sort(Dictionary<Company, List<InboundOrderLine>> orderlinesByCompany)
+        {
+            return orderlinesByCompany.Select(ol => new OrderSegment()
+            {
+                OrderLines = ol.Value,
+                Company = ol.Key
+            });
+        }
+        private static InboundOrderResponse CreateOrderResponse(int warehouseId, Employee operationsManager, IEnumerable<OrderSegment> orderSegments)
+        {
+            return new InboundOrderResponse()
+            {
+                OperationsManager = operationsManager,
+                WarehouseId = warehouseId,
+                OrderSegments = orderSegments.ToList()
+            };
+        }
         public void Post([FromBody]InboundManifestRequestModel requestModel)
         {
             log.Info("Processing manifest: " + requestModel);
@@ -164,6 +161,5 @@ namespace ShipIt.Controllers
             stockRepository.AddStock(requestModel.WarehouseId, lineItems);
             log.Info("Stock levels increased");
         }
-            
     }
 }
