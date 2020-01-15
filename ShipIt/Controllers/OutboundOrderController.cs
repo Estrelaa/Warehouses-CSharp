@@ -117,12 +117,9 @@ namespace ShipIt.Controllers
         }
         public List<Truck> Truck(OutboundOrderRequestModel request)
         {
-            //create our list of trucks for the order
             List<Truck> trucks = new List<Truck>();
-
             var gtins = AddGtins(request);
             Dictionary<string, Product> products = CreateProducts(gtins);
-            var lastGtin = "0";
 
             foreach (var orderLine in request.OrderLines)
             {
