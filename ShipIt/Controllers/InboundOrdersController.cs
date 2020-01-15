@@ -45,35 +45,19 @@ namespace ShipIt.Controllers
             for (int i = 0; i < LowStock.Count; i++)
             {
                 RestockingDataModel stock = LowStock[i];
-                // get the company that makes the item
-                Company company = MakeComp(stock);
+                Company company = CreateCompanyDataModelNeededForOrder(stock);
 
                 if (!orderlinesByCompany.ContainsKey(company))
                 {
                     orderlinesByCompany.Add(company, new List<InboundOrderLine>());
                 }
 
-                // decide how many items to order 
-                var orderQuantity = Math.Max(stock.LowerThreshold * 3 - stock.Held, stock.MinimumOrderQuantity);
-
-                //put a new order in the dict
-                orderlinesByCompany[company].Add(
-                    new InboundOrderLine()
-                    {
-                        gtin = stock.ProductNumber,
-                        name = stock.ProductName,
-                        quantity = orderQuantity
-                    });
+                CreateOrder(orderlinesByCompany, stock, company);
             };
 
             log.Debug(String.Format("Constructed order lines: {0}", orderlinesByCompany));
 
-            //order it
-            var orderSegments = orderlinesByCompany.Select(ol => new OrderSegment()
-            {
-                OrderLines = ol.Value,
-                Company = ol.Key
-            });
+            IEnumerable<OrderSegment> orderSegments = Sort(orderlinesByCompany);
 
             log.Info("Constructed inbound order");
 
@@ -86,7 +70,31 @@ namespace ShipIt.Controllers
             };
         }
 
-        private static Company MakeComp(RestockingDataModel stock)
+        private static IEnumerable<OrderSegment> Sort(Dictionary<Company, List<InboundOrderLine>> orderlinesByCompany)
+        {
+            return orderlinesByCompany.Select(ol => new OrderSegment()
+            {
+                OrderLines = ol.Value,
+                Company = ol.Key
+            });
+        }
+
+        private static void CreateOrder(Dictionary<Company, List<InboundOrderLine>> orderlinesByCompany, RestockingDataModel stock, Company company)
+        {
+            // decide how many items to order 
+            var orderQuantity = Math.Max(stock.LowerThreshold * 3 - stock.Held, stock.MinimumOrderQuantity);
+
+            //put a new order in the dict
+            orderlinesByCompany[company].Add(
+                new InboundOrderLine()
+                {
+                    gtin = stock.ProductNumber,
+                    name = stock.ProductName,
+                    quantity = orderQuantity
+                });
+        }
+
+        private static Company CreateCompanyDataModelNeededForOrder(RestockingDataModel stock)
         {
             Company company = new Company();
 
