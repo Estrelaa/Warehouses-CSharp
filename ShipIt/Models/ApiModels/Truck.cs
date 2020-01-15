@@ -7,7 +7,8 @@ namespace ShipIt.Models.ApiModels
 {
     public class Truck
     {
-        public int weight = 0; // in grams
-        public List<Product> products = new List<Product>();
+        public int MaxWeightInGrams = 2000000;
+        public int WeightInGrams { get; set; }
+        public List<OrderLine> Products { get; set; }
     }
 }

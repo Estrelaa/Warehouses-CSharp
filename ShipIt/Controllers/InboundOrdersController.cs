@@ -42,7 +42,7 @@ namespace ShipIt.Controllers
 
             Dictionary<Company, List<InboundOrderLine>> orderlinesByCompany = new Dictionary<Company, List<InboundOrderLine>>();
 
-            foreach ( var stock in LowStock)
+            foreach (var stock in LowStock)
             {
                 // get the company that makes the item
                 Company company = MakeComp(stock);
@@ -50,20 +50,20 @@ namespace ShipIt.Controllers
                 if (!orderlinesByCompany.ContainsKey(company))
                 {
                     orderlinesByCompany.Add(company, new List<InboundOrderLine>());
+                }
 
-                    // decide how many items to order 
-                    var orderQuantity = Math.Max(stock.LowerThreshold * 3 - stock.Held, stock.MinimumOrderQuantity);
+                // decide how many items to order 
+                var orderQuantity = Math.Max(stock.LowerThreshold * 3 - stock.Held, stock.MinimumOrderQuantity);
 
-                    //put a new order in the dict
-                    orderlinesByCompany[company].Add(
-                        new InboundOrderLine()
-                        {
-                            gtin = stock.ProductNumber,
-                            name = stock.ProductName,
-                            quantity = orderQuantity
-                        });
-                };
-            }
+                //put a new order in the dict
+                orderlinesByCompany[company].Add(
+                    new InboundOrderLine()
+                    {
+                        gtin = stock.ProductNumber,
+                        name = stock.ProductName,
+                        quantity = orderQuantity
+                    });
+            };
 
             log.Debug(String.Format("Constructed order lines: {0}", orderlinesByCompany));
 
