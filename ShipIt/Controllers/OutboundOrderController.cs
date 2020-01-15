@@ -39,10 +39,12 @@ namespace ShipIt.Controllers
 
             var productDataModels = productRepository.GetProductsByGtin(gtins);
             var products = productDataModels.ToDictionary(p => p.Gtin, p => new Product(p));
+            var wiegthLimit = 2000000; // the max weigth in grams
 
             var lineItems = new List<StockAlteration>();
             var productIds = new List<int>();
             var errors = new List<string>();
+            var Vans = new List<int>();
 
             foreach (var orderLine in request.OrderLines)
             {
@@ -92,7 +94,11 @@ namespace ShipIt.Controllers
             {
                 throw new InsufficientStockException(string.Join("; ", errors));
             }
-            
+
+            foreach (var product in productDataModels)
+            {
+                
+            }
             stockRepository.RemoveStock(request.WarehouseId, lineItems);
         }
     }
