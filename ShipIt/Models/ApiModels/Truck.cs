@@ -7,8 +7,8 @@ namespace ShipIt.Models.ApiModels
 {
     public class Truck
     {
-        public int MaxWeightInGrams = 2000000;
-        public int WeightInGrams { get; set; }
-        public List<OrderLine> Products { get; set; }
+        public float MaxWeightInGrams = 2000000;
+        public float WeightInGrams { get; set; }
+        public List<Product> Products { get; set; }
     }
 }

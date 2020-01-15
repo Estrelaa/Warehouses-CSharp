@@ -49,7 +49,7 @@ namespace ShipIt.Controllers
 
             trucks.Add(new Truck() {
                 WeightInGrams = 0,
-                Products = new List<OrderLine>()
+                Products = new List<Product>()
             });
 
             foreach (var orderLine in request.OrderLines)
@@ -63,7 +63,24 @@ namespace ShipIt.Controllers
                     var product = products[orderLine.gtin];
                     lineItems.Add(new StockAlteration(product.Id, orderLine.quantity));
                     productIds.Add(product.Id);
+
+                    //Get the last truck in the list as it should have space left
+                    var truck = trucks.Last();
+                    // Check that this truck has weight left if it does not, create and use a new truck
+                    if (truck.WeightInGrams + product.Weight > truck.MaxWeightInGrams)
+                    {
+                        trucks.Add(new Truck()
+                        {
+                            WeightInGrams = 0,
+                            Products = new List<Product>()
+                        });
+                        truck = trucks.Last();
+                    }
+                    // when we find the right product in the dict, add that product to the truck
+                    truck.Products.Add(product);
+                    truck.WeightInGrams =+ product.Weight;
                 }
+                
             }
 
             if (errors.Count > 0)
@@ -99,19 +116,6 @@ namespace ShipIt.Controllers
             if (errors.Count > 0)
             {
                 throw new InsufficientStockException(string.Join("; ", errors));
-            }
-
-            foreach (var order in request.OrderLines)
-            {
-                //Get the last truck 
-                var truck = trucks.Last();
-                if (truck.WeightInGrams < truck.MaxWeightInGrams)
-                {
-                    for (int i = 0; i <= order.quantity; i++)
-                    {
-
-                    }
-                }
             }
             stockRepository.RemoveStock(request.WarehouseId, lineItems);
         }
