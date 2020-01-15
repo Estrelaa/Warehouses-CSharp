@@ -1,6 +1,5 @@
 ﻿using ShipIt.Models.DataModels;
 using System;
-using System.Collections.Generic;
 using System.Text;
 
 namespace ShipIt.Models.ApiModels

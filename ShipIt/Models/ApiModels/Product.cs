@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using ShipIt.Models.DataModels;
+using System;
 using System.Text;
-using System.Web;
-using ShipIt.Models.DataModels;
 
 namespace ShipIt.Models.ApiModels
 {

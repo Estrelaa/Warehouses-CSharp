@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using ShipIt.Startup;
 using System.Configuration;
-using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
-using System.Web;
-using ShipIt.Startup;
 
 namespace ShipIt.Repositories
 {

@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using ShipIt.Models.ApiModels;
+using System;
 using System.Data;
-using System.Linq;
-using Npgsql;
-using ShipIt.Models.ApiModels;
-using ShipIt.Startup;
 
 namespace ShipIt.Models.DataModels
 {

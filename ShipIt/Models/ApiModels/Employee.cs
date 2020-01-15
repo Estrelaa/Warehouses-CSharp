@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
+﻿using ShipIt.Models.DataModels;
+using System;
 using System.Text;
-using System.Web;
-using Mono.Security.Authenticode;
-using ShipIt.Models.DataModels;
 
 namespace ShipIt.Models.ApiModels
 {

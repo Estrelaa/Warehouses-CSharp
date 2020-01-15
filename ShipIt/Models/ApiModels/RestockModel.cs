@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using ShipIt.Models.DataModels;
-
-namespace ShipIt.Models.ApiModels
+﻿namespace ShipIt.Models.ApiModels
 {
     public class RestockModel
     {

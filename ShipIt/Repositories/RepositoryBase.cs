@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Dynamic;
-using System.Linq;
-using System.Web.UI.WebControls.WebParts;
-using Npgsql;
+﻿using Npgsql;
 using ShipIt.Exceptions;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
 
 namespace ShipIt.Repositories
 {
