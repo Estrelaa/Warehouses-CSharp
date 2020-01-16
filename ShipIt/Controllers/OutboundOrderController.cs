@@ -54,7 +54,7 @@ namespace ShipIt.Controllers
                 throw new InsufficientStockException(string.Join("; ", errors));
             }
 
-            List<Truck> trucks = Truck(request);
+            List<Truck> trucks = Truck(request, gtins, products);
 
             stockRepository.RemoveStock(request.WarehouseId, lineItems);
         }
@@ -113,47 +113,57 @@ namespace ShipIt.Controllers
             return errors;
 
         }
-        public List<Truck> Truck(OutboundOrderRequestModel request)
+        public List<Truck> Truck(OutboundOrderRequestModel request, List<string> gtins = default, Dictionary<string, Product> products = default)
         {
             // make a new list of trucks
             List<Truck> trucks = new List<Truck>();
-            //Get all of the products in the order
-            var gtins = AddGtins(request);
-            Dictionary<string, Product> products = CreateProducts(gtins);
+
+            //Get all of the products in the order, if we need to
+            if (gtins == default)
+            {
+                gtins = AddGtins(request);
+            }
+            if (products == default)
+            {
+                products = CreateProducts(gtins);
+            }
 
             foreach (var orderLine in request.OrderLines)
             {
                 // make a new trck at the start of a new order 
                 trucks.Add(new Truck()
                 {
-                    WeightInGrams = 0,
+                    CurrentWeightInGrams = 0,
                     Products = new List<Product>()
                 });
 
-                // for each product in the order
                 for (int i = 0; i < orderLine.quantity; i++)
                 {
                     var product = products[orderLine.gtin];
 
-                    //Get the last truck in the list as it should have space left
-                    var truck = trucks.Last();
-                    // Check that this truck has weight left if it does not, create and use a new truck
-                    if (truck.WeightInGrams + product.Weight > truck.MaxWeightInGrams)
+                    var truck = trucks.Last(); //Get the last truck in the list as it should have space left
+                    if (truck.CurrentWeightInGrams + product.Weight > truck.MaxWeightInGrams)
                     {
-                        trucks.Add(new Truck()
-                        {
-                            WeightInGrams = 0,
-                            Products = new List<Product>()
-                        });
-                        truck = trucks.Last();
+                        truck = CreateTruckAndUseIt(trucks);
                     }
-                    // when we find the right product in the dict, add that product to the truck
                     truck.Products.Add(product);
-                    truck.WeightInGrams = truck.WeightInGrams + product.Weight;
+                    truck.CurrentWeightInGrams += product.Weight;
                 }          
             }
       
             return trucks;
+        }
+
+        private static Truck CreateTruckAndUseIt(List<Truck> trucks)
+        {
+            Truck truck;
+            trucks.Add(new Truck()
+            {
+                CurrentWeightInGrams = 0,
+                Products = new List<Product>()
+            });
+            truck = trucks.Last();
+            return truck;
         }
     }
 }
