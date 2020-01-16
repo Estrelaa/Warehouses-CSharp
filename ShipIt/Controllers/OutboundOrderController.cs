@@ -24,41 +24,25 @@ namespace ShipIt.Controllers
 
         public void Post([FromBody]OutboundOrderRequestModel request)
         {
-            log.Info(String.Format("Processing outbound order: {0}", request));
-         
+            log.Info(string.Format("Processing outbound order: {0}", request));
+
             var lineItems = new List<StockAlteration>();
             var productIds = new List<int>();
             var gtins = AddGtins(request);
 
             Dictionary<string, Product> products = CreateProducts(gtins);
-            foreach (var orderLine in request.OrderLines)
-            {
-                try
-                {
-                    var product = products[orderLine.gtin];
-                    lineItems.Add(new StockAlteration(product.Id, orderLine.quantity));
-                    productIds.Add(product.Id);
-                }
-                catch (KeyNotFoundException)
-                {
-                    throw new NoSuchEntityException(string.Join("; ", orderLine.gtin));
-                }
-            }
+            GetProductIDs(request, productIds, products);
+            GetAmountOfStockToRemove(request, lineItems, products);
 
             var stock = stockRepository.GetStockByWarehouseAndProductIds(request.WarehouseId, productIds);
             var orderLines = request.OrderLines.ToList();
-            List<string> errors = CheckStocks(lineItems, stock, orderLines, products);
 
-            if (errors.Count > 0)
-            {
-                throw new InsufficientStockException(string.Join("; ", errors));
-            }
+            CheckStocksForIfWeCanDoTheOrder(lineItems, stock, orderLines, products);
 
-            List<Truck> trucks = Truck(request, gtins, products);
+            Truck(request, gtins, products);
 
             stockRepository.RemoveStock(request.WarehouseId, lineItems);
-        }
-
+        }    
         private static List<String> AddGtins(OutboundOrderRequestModel request)
         {
             var gtins = new List<String>();
@@ -72,15 +56,37 @@ namespace ShipIt.Controllers
             }
             return gtins;
         }
-
         public Dictionary<string, Product> CreateProducts(List<string> gtins)
         {
             var productDataModels = productRepository.GetProductsByGtin(gtins);
             var products = productDataModels.ToDictionary(p => p.Gtin, p => new Product(p));
             return products;
         }
+        private static void GetProductIDs(OutboundOrderRequestModel request, List<int> productIds, Dictionary<string, Product> products)
+        {
+            foreach (var orderLine in request.OrderLines)
+            {
+                try
+                {
+                    var product = products[orderLine.gtin];
 
-        private static List<string> CheckStocks(List<StockAlteration> lineItems, Dictionary<int, StockDataModel> stock, List<OrderLine> orderLines, Dictionary<string, Product> products)
+                    productIds.Add(product.Id);
+                }
+                catch (KeyNotFoundException)
+                {
+                    throw new NoSuchEntityException(string.Join("; ", orderLine.gtin));
+                }
+            }
+        }
+        private static void GetAmountOfStockToRemove(OutboundOrderRequestModel request, List<StockAlteration> lineItems, Dictionary<string, Product> products)
+        {
+            foreach (var orderLine in request.OrderLines)
+            {
+                var product = products[orderLine.gtin];
+                lineItems.Add(new StockAlteration(product.Id, orderLine.quantity));
+            }
+        }
+        private void CheckStocksForIfWeCanDoTheOrder(List<StockAlteration> lineItems, Dictionary<int, StockDataModel> stock, List<OrderLine> orderLines, Dictionary<string, Product> products)
         {
             List<string> errors = new List<string>();
             for (int i = 0; i < lineItems.Count; i++)
@@ -110,8 +116,10 @@ namespace ShipIt.Controllers
                     }
                 }
             }
-            return errors;
-
+            if (errors.Count > 0)
+            {
+                throw new InsufficientStockException(string.Join("; ", errors));
+            }
         }
         public List<Truck> Truck(OutboundOrderRequestModel request, List<string> gtins = default, Dictionary<string, Product> products = default)
         {
@@ -153,7 +161,6 @@ namespace ShipIt.Controllers
       
             return trucks;
         }
-
         private static Truck CreateTruckAndUseIt(List<Truck> trucks)
         {
             Truck truck;
