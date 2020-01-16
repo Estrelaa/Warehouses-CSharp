@@ -181,7 +181,13 @@ namespace ShipItTest
             var databaseEmployeeByID = employeeController.GetEmployeeByID(ID);
 
             //Check that they are the same person
-            Assert.ReferenceEquals(databaseEmployee.Employees.First(), databaseEmployeeByID.Employees.First());
+            Assert.AreEqual(databaseEmployee.Employees.First().PersonalId, databaseEmployeeByID.Employees.First().PersonalId);
+
+        }
+        [TestMethod]
+        public void TestDeleteEmployeeByID()
+        {
+
         }
 
         private bool EmployeesAreEqual(Employee A, Employee B)
