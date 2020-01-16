@@ -165,7 +165,7 @@ namespace ShipItTest
             Assert.IsTrue(true);
         }
         [TestMethod]
-        public void TestGetEmployeeIdByName()
+        public void TestGetEmployeeByID()
         {
             onSetUp();
             // Create an employee
@@ -182,7 +182,7 @@ namespace ShipItTest
             var databaseEmployeeByID = employeeController.GetEmployeeByID(ID);
 
             //Check that they are the same person
-            Assert.AreEqual(databaseEmployee, databaseEmployeeByID);
+            Assert.AreEqual(databaseEmployee.Employees.First(), databaseEmployeeByID.Employees.First());
         }
 
         private bool EmployeesAreEqual(Employee A, Employee B)
