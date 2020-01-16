@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ShipIt.Models.ApiModels;
 using ShipIt.Models.DataModels;
 using ShipIt.Repositories;
-using ShipItTest.Builders;
 using ShipIt.Startup;
+using ShipItTest.Builders;
+using System.Collections.Generic;
 
 namespace ShipItTest
 {
