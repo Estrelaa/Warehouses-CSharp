@@ -5,6 +5,7 @@ using ShipIt.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace ShipIt.Controllers
@@ -64,7 +65,7 @@ namespace ShipIt.Controllers
         }
         private static void GetProductIDs(OutboundOrderRequestModel request, List<int> productIds, Dictionary<string, Product> products)
         {
-            foreach (var orderLine in request.OrderLines)
+            Parallel.ForEach(request.OrderLines, (orderLine) =>
             {
                 try
                 {
@@ -76,15 +77,15 @@ namespace ShipIt.Controllers
                 {
                     throw new NoSuchEntityException(string.Join("; ", orderLine.gtin));
                 }
-            }
+            });
         }
         private static void GetAmountOfStockToRemove(OutboundOrderRequestModel request, List<StockAlteration> lineItems, Dictionary<string, Product> products)
         {
-            foreach (var orderLine in request.OrderLines)
-            {
-                var product = products[orderLine.gtin];
-                lineItems.Add(new StockAlteration(product.Id, orderLine.quantity));
-            }
+            Parallel.ForEach(request.OrderLines, (orderLine) =>
+           {
+               var product = products[orderLine.gtin];
+               lineItems.Add(new StockAlteration(product.Id, orderLine.quantity));
+           });
         }
         private void CheckStocksForIfWeCanDoTheOrder(List<StockAlteration> lineItems, Dictionary<int, StockDataModel> stock, List<OrderLine> orderLines, Dictionary<string, Product> products)
         {
