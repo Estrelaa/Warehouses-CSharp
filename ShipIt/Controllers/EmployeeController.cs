@@ -64,7 +64,7 @@ namespace ShipIt.Controllers
 
             return new Response() { Success = true };
         }
-        public EmployeeResponse GetEmployeeIdByName(string Name)
+        public EmployeeResponse GetEmployeeByID(int ID)
         {
             var employees = new EmployeeResponse();
 
