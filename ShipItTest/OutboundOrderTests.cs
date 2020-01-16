@@ -228,7 +228,7 @@ namespace ShipItTest
             // ASSERT
             Assert.AreEqual(1, trucks.Count);
             Assert.AreEqual(1999, trucks[0].Products.Count);
-            Assert.AreEqual(1999000, trucks[0].WeightInGrams);
+            Assert.AreEqual(1999000, trucks[0].CurrentWeightInGrams);
         }
         [TestMethod]
         public void TestOutboundOrderTrucksContainItemsWePutInThem()
