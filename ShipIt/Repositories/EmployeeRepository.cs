@@ -73,7 +73,7 @@ namespace ShipIt.Repositories
 
         public EmployeeDataModel GetEmployeeByName(string name)
         {
-            string sql = "SELECT name, w_id, role, ext FROM em WHERE name = @name";
+            string sql = "SELECT * FROM em WHERE name = @name";
             var parameter = new NpgsqlParameter("@name", name);
             string noProductWithIdErrorMessage = string.Format("No employees found with name: {0}", name);
             return base.RunSingleGetQuery(sql, reader => new EmployeeDataModel(reader),noProductWithIdErrorMessage, parameter);
@@ -82,7 +82,7 @@ namespace ShipIt.Repositories
         public IEnumerable<EmployeeDataModel> GetEmployeesByWarehouseId(int warehouseId)
         {
 
-            string sql = "SELECT name, w_id, role, ext FROM em WHERE w_id = @w_id";
+            string sql = "SELECT * FROM em WHERE w_id = @w_id";
             var parameter = new NpgsqlParameter("@w_id", warehouseId);
             string noProductWithIdErrorMessage =
                 string.Format("No employees found with Warehouse Id: {0}", warehouseId);
@@ -92,7 +92,7 @@ namespace ShipIt.Repositories
         public EmployeeDataModel GetOperationsManager(int warehouseId)
         {
 
-            string sql = "SELECT name, w_id, role, ext FROM em WHERE w_id = @w_id AND role = @role";
+            string sql = "SELECT * FROM em WHERE w_id = @w_id AND role = @role";
             var parameters = new []
             {
                 new NpgsqlParameter("@w_id", warehouseId),
@@ -116,6 +116,16 @@ namespace ShipIt.Repositories
             }
 
             base.RunTransaction(sql, parametersList);
+        }
+        public string AddEmployee(Employee employee)
+        {
+
+            string sql = "INSERT INTO em(name, w_id, role, ext) VALUES (@name, @w_id, @role, @ext) RETURNING personal_id";
+            string CouldNotAddEmloyee =
+                string.Format("Could Not Add Emloyee");
+            var id = RunSingleGetQuery(sql, reader => new EmployeeDataModel(reader),CouldNotAddEmloyee);
+
+            return id.PersonalId.ToString();
         }
 
         public void RemoveEmployee(string name)

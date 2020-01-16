@@ -9,14 +9,16 @@ namespace ShipIt.Models.ApiModels
         public string Name { get; set; }
         public int WarehouseId { get; set; }
         public EmployeeRole role { get; set; }
-        public string ext { get; set; }
+        public string Ext { get; set; }
+        public int PersonalId { get; set; }
 
         public Employee(EmployeeDataModel dataModel)
         {
             Name = dataModel.Name;
             WarehouseId = dataModel.WarehouseId;
             role = MapDatabaseRoleToApiRole(dataModel.Role);
-            ext = dataModel.Ext;
+            Ext = dataModel.Ext;
+            PersonalId = dataModel.PersonalId;
         }
 
         private EmployeeRole MapDatabaseRoleToApiRole(string databaseRole)
@@ -39,7 +41,8 @@ namespace ShipIt.Models.ApiModels
                     .AppendFormat("name: {0}, ", Name)
                     .AppendFormat("warehouseId: {0}, ", WarehouseId)
                     .AppendFormat("role: {0}, ", role)
-                    .AppendFormat("ext: {0}", ext)
+                    .AppendFormat("ext: {0}", Ext)
+                    .AppendFormat("PersonalId: {0}", PersonalId)
                     .ToString();
         }
     }

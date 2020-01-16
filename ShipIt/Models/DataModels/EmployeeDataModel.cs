@@ -14,6 +14,8 @@ namespace ShipIt.Models.DataModels
         public string Role { get; set; }
         [DatabaseColumnName("ext")]
         public string Ext { get; set; }
+        [DatabaseColumnName("personal_id")]
+        public int PersonalId { get; set; }
 
         public EmployeeDataModel(IDataReader dataReader) : base(dataReader)
         { }
@@ -26,7 +28,8 @@ namespace ShipIt.Models.DataModels
             this.Name = employee.Name;
             this.WarehouseId = employee.WarehouseId;
             this.Role = MapApiRoleToDatabaseRole(employee.role);
-            this.Ext = employee.ext;
+            this.Ext = employee.Ext;
+            this.PersonalId = employee.PersonalId;
         }
 
         private string MapApiRoleToDatabaseRole(EmployeeRole employeeRole)
