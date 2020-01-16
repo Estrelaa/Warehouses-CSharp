@@ -187,6 +187,28 @@ namespace ShipItTest
         [TestMethod]
         public void TestDeleteEmployeeByID()
         {
+            // Create an employee
+            var employeeBuilder = new EmployeeBuilder().setName(NAME);
+            var addEmployeesRequest = employeeBuilder.CreateAddEmployeesRequest();
+
+            // Add them to the database 
+            employeeController.Post(addEmployeesRequest);
+            //Get them from the database and find their ID 
+            var databaseEmployee = employeeController.Get(NAME);
+            var ID = databaseEmployee.Employees.Last().PersonalId;
+
+            var removeEmployeeRequest = new RemoveEmployeeRequest() { PersonalID = ID };
+            employeeController.Delete(removeEmployeeRequest);
+
+            try
+            {
+                employeeController.Get(NAME);
+                Assert.Fail("Expected exception to be thrown.");
+            }
+            catch (NoSuchEntityException e)
+            {
+                Assert.IsTrue(e.Message.Contains(NAME));
+            }
 
         }
 

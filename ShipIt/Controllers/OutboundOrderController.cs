@@ -115,18 +115,22 @@ namespace ShipIt.Controllers
         }
         public List<Truck> Truck(OutboundOrderRequestModel request)
         {
+            // make a new list of trucks
             List<Truck> trucks = new List<Truck>();
+            //Get all of the products in the order
             var gtins = AddGtins(request);
             Dictionary<string, Product> products = CreateProducts(gtins);
 
             foreach (var orderLine in request.OrderLines)
             {
+                // make a new trck at the start of a new order 
                 trucks.Add(new Truck()
                 {
                     WeightInGrams = 0,
                     Products = new List<Product>()
                 });
 
+                // for each product in the order
                 for (int i = 0; i < orderLine.quantity; i++)
                 {
                     var product = products[orderLine.gtin];
