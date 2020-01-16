@@ -187,6 +187,7 @@ namespace ShipItTest
         [TestMethod]
         public void TestDeleteEmployeeByID()
         {
+            onSetUp();
             // Create an employee
             var employeeBuilder = new EmployeeBuilder().setName(NAME);
             var addEmployeesRequest = employeeBuilder.CreateAddEmployeesRequest();
@@ -202,13 +203,14 @@ namespace ShipItTest
 
             try
             {
-                employeeController.Get(NAME);
-                Assert.Fail("Expected exception to be thrown.");
+                employeeController.GetEmployeeByID(ID);
+                Assert.IsTrue(false); //Means that it found the employee so fail the test
             }
-            catch (NoSuchEntityException e)
+            catch 
             {
-                Assert.IsTrue(e.Message.Contains(NAME));
+                Assert.IsTrue(true);
             }
+            
 
         }
 
