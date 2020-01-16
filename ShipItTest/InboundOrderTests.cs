@@ -228,7 +228,7 @@ namespace ShipItTest
             return A.WarehouseId == B.WarehouseId
                    && A.Name == B.Name
                    && A.role == B.role
-                   && A.ext == B.ext;
+                   && A.Ext == B.Ext;
         }
     }
 }
