@@ -18,6 +18,7 @@ namespace ShipIt.Repositories
         EmployeeDataModel GetEmployeeByID(int ID);
         void AddEmployees(IEnumerable<Employee> employees);
         void RemoveEmployee(string name);
+        void RemoveEmployee(int ID);
     }
 
     public class EmployeeRepository : RepositoryBase, IEmployeeRepository
@@ -140,6 +141,20 @@ namespace ShipIt.Repositories
         {
             string sql = "DELETE FROM em WHERE name = @name";
             var parameter = new NpgsqlParameter("@name", name);
+            var rowsDeleted = RunSingleQueryAndReturnRecordsAffected(sql, parameter);
+            if (rowsDeleted == 0)
+            {
+                throw new NoSuchEntityException("Incorrect result size: expected 1, actual 0");
+            }
+            else if (rowsDeleted > 1)
+            {
+                throw new InvalidStateException("Unexpectedly deleted " + rowsDeleted + " rows, but expected a single update");
+            }
+        }
+        public void RemoveEmployee(int ID)
+        {
+            string sql = "DELETE FROM em WHERE personal_id = @ID";
+            var parameter = new NpgsqlParameter("@ID", ID);
             var rowsDeleted = RunSingleQueryAndReturnRecordsAffected(sql, parameter);
             if (rowsDeleted == 0)
             {
