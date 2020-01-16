@@ -168,11 +168,21 @@ namespace ShipItTest
         public void TestGetEmployeeIdByName()
         {
             onSetUp();
+            // Create an employee
             var employeeBuilder = new EmployeeBuilder().setName(NAME);
             var addEmployeesRequest = employeeBuilder.CreateAddEmployeesRequest();
 
-            var Response = employeeController.GetEmployeeIdByName(NAME);
-            //Assert.AreEqual(, );
+            // Add them to the database 
+            var response = employeeController.Post(addEmployeesRequest);
+            //Get them from the database and find their ID 
+            var databaseEmployee = employeeController.Get(NAME);
+            var ID = databaseEmployee.Employees.Last().PersonalId;
+
+            //Find them by their PersonalID
+            var databaseEmployeeByID = employeeController.GetEmployeeByID(ID);
+
+            //Check that they are the same person
+            Assert.AreEqual(databaseEmployee, databaseEmployeeByID);
         }
 
         private bool EmployeesAreEqual(Employee A, Employee B)
