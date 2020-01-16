@@ -156,7 +156,6 @@ namespace ShipItTest
             try
             {
                 employeeController.Post(addEmployeesRequest);
-                Assert.Fail("Expected exception to be thrown.");
             }
             catch (Exception)
             {
@@ -173,7 +172,7 @@ namespace ShipItTest
             var addEmployeesRequest = employeeBuilder.CreateAddEmployeesRequest();
 
             // Add them to the database 
-            var response = employeeController.Post(addEmployeesRequest);
+            employeeController.Post(addEmployeesRequest);
             //Get them from the database and find their ID 
             var databaseEmployee = employeeController.Get(NAME);
             var ID = databaseEmployee.Employees.Last().PersonalId;
@@ -182,7 +181,7 @@ namespace ShipItTest
             var databaseEmployeeByID = employeeController.GetEmployeeByID(ID);
 
             //Check that they are the same person
-            Assert.AreEqual(databaseEmployee.Employees.First(), databaseEmployeeByID.Employees.First());
+            Assert.ReferenceEquals(databaseEmployee.Employees.First(), databaseEmployeeByID.Employees.First());
         }
 
         private bool EmployeesAreEqual(Employee A, Employee B)
