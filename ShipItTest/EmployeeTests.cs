@@ -160,8 +160,19 @@ namespace ShipItTest
             }
             catch (Exception)
             {
-                Assert.IsTrue(true);
+                Assert.IsTrue(false); //means that we could not add a dup, so fail the test
             }
+            Assert.IsTrue(true);
+        }
+        [TestMethod]
+        public void TestGetEmployeeIdByName()
+        {
+            onSetUp();
+            var employeeBuilder = new EmployeeBuilder().setName(NAME);
+            var addEmployeesRequest = employeeBuilder.CreateAddEmployeesRequest();
+
+            var Response = employeeController.GetEmployeeIdByName(NAME);
+            //Assert.AreEqual(, );
         }
 
         private bool EmployeesAreEqual(Employee A, Employee B)
