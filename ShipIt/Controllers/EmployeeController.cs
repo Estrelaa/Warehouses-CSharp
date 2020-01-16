@@ -66,9 +66,9 @@ namespace ShipIt.Controllers
         }
         public EmployeeResponse GetEmployeeByID(int ID)
         {
-            var employees = new EmployeeResponse();
+            var employees = new Employee(employeeRepository.GetEmployeeByID(ID));
 
-            return employees;
+            return new EmployeeResponse(employees);
         }
 
         public void Delete([FromBody]RemoveEmployeeRequest requestModel)
