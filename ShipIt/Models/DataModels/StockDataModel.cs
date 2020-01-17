@@ -11,6 +11,8 @@ namespace ShipIt.Models.DataModels
         [DatabaseColumnName("hld")]
         public int held { get; set; }
 
-        public StockDataModel(IDataReader dataReader): base(dataReader) { }
+        public StockDataModel(IDataReader dataReader): base(dataReader) 
+        { 
+        }
     }
 }
