@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using Npgsql;
+﻿using Npgsql;
 using ShipIt.Exceptions;
 using ShipIt.Models.DataModels;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ShipIt.Repositories
 {
@@ -28,24 +27,21 @@ namespace ShipIt.Repositories
 
         public ProductDataModel GetProductByGtin(string gtin)
         {
-
             string sql = "SELECT p_id, gtin_cd, gcp_cd, gtin_nm, m_g, l_th, ds, min_qt FROM gtin WHERE gtin_cd = @gtin_cd";
             var parameter = new NpgsqlParameter("@gtin_cd", gtin);
-            return base.RunSingleGetQuery(sql, reader => new ProductDataModel(reader),
+            return RunSingleGetQuery(sql, reader => new ProductDataModel(reader),
                 string.Format("No products found with gtin of value {0}", gtin), parameter);
         }
 
         public IEnumerable<ProductDataModel> GetProductsByGtin(List<string> gtins)
         {
-
-            string sql = String.Format("SELECT p_id, gtin_cd, gcp_cd, gtin_nm, m_g, l_th, ds, min_qt FROM gtin WHERE gtin_cd IN ('{0}')", 
-                String.Join("','", gtins));
-            return base.RunGetQuery(sql, reader => new ProductDataModel(reader), "No products found with given gtin ids", null);
+            string sql = string.Format("SELECT p_id, gtin_cd, gcp_cd, gtin_nm, m_g, l_th, ds, min_qt FROM gtin WHERE gtin_cd IN ('{0}')",
+                string.Join("','", gtins));
+            return RunGetQuery(sql, reader => new ProductDataModel(reader), "No products found with given gtin ids", null);
         }
 
         public ProductDataModel GetProductById(int id)
         {
-
             string sql = "SELECT p_id, gtin_cd, gcp_cd, gtin_nm, m_g, l_th, ds, min_qt FROM gtin WHERE p_id = @p_id";
             var parameter = new NpgsqlParameter("@p_id", id);
             string noProductWithIdErrorMessage = string.Format("No products found with id of value {0}", id.ToString());
@@ -86,7 +82,6 @@ namespace ShipIt.Repositories
                 throw new MalformedRequestException(string.Format("Cannot add products with existing gtins: {0}",
                     string.Join(", ", conflicts.Select(c => c.Gtin))));
             }
-
             RunTransaction(sql, parametersList);
         }
 
