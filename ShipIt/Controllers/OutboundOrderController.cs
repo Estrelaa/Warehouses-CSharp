@@ -65,7 +65,7 @@ namespace ShipIt.Controllers
         }
         private static void GetProductIDs(OutboundOrderRequestModel request, List<int> productIds, Dictionary<string, Product> products)
         {
-            Parallel.ForEach(request.OrderLines, (orderLine) =>
+            foreach(var orderLine in request.OrderLines)
             {
                 try
                 {
@@ -77,7 +77,7 @@ namespace ShipIt.Controllers
                 {
                     throw new NoSuchEntityException(string.Join("; ", orderLine.gtin));
                 }
-            });
+            }
         }
         private static void GetAmountOfStockToRemove(OutboundOrderRequestModel request, List<StockAlteration> lineItems, Dictionary<string, Product> products)
         {
