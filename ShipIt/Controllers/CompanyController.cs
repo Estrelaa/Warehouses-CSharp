@@ -45,9 +45,7 @@ namespace ShipIt.Controllers
             }
 
             log.Info("Adding companies: " + companiesToAdd);
-
-            companyRepository.AddCompanies(companiesToAdd);
-            
+            companyRepository.AddCompanies(companiesToAdd);            
             log.Debug("Companies added successfully");
 
             return new Response() {Success = true};

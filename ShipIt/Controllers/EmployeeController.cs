@@ -1,18 +1,13 @@
-﻿using System;
+﻿using ShipIt.Exceptions;
+using ShipIt.Models.ApiModels;
+using ShipIt.Repositories;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Web.Http;
-using ShipIt.Exceptions;
-using ShipIt.Models.ApiModels;
-using ShipIt.Models.DataModels;
-using ShipIt.Parsers;
-using ShipIt.Repositories;
-using ShipIt.Validators;
 
 namespace ShipIt.Controllers
 {
-
     public class EmployeeController : ApiController
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -77,7 +72,7 @@ namespace ShipIt.Controllers
             int personalID = requestModel.PersonalID;
             if (name == null && personalID == 0)
             {
-                throw new MalformedRequestException("Unable to parse name from request parameters");
+                throw new MalformedRequestException("Unable to parse name or personal ID from request parameters");
             }
             if (name == null)
             {
@@ -87,7 +82,7 @@ namespace ShipIt.Controllers
                 }
                 catch (NoSuchEntityException)
                 {
-                    throw new NoSuchEntityException("No employee exists with name: " + name);
+                    throw new NoSuchEntityException("No employee exists with ID: " + personalID);
                 }
             }
             else
@@ -100,7 +95,6 @@ namespace ShipIt.Controllers
                 {
                     throw new NoSuchEntityException("No employee exists with name: " + name);
                 }
-
             }
         }
     }

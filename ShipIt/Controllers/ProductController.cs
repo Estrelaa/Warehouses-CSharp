@@ -29,9 +29,7 @@ namespace ShipIt.Controllers
             }
 
             log.Info("Looking up product by gtin: " + gtin);
-
             var product = new Product(productRepository.GetProductByGtin(gtin));
-
             log.Info("Found product: " + product);
 
             return new ProductResponse(product);
@@ -49,10 +47,8 @@ namespace ShipIt.Controllers
             }
 
             log.Info("Adding products: " + parsedProducts);
-
             var dataProducts = parsedProducts.Select(p => new ProductDataModel(p));
-            productRepository.AddProducts(dataProducts);
-            
+            productRepository.AddProducts(dataProducts);           
             log.Debug("Products added successfully");
 
             return new Response() { Success = true };
@@ -67,9 +63,7 @@ namespace ShipIt.Controllers
             }
 
             log.Info("Discontinuing up product by gtin: " + gtin);
-
             productRepository.DiscontinueProductByGtin(gtin);
-
             log.Info("Discontinued product: " + gtin);
 
             return new Response() { Success = true };
