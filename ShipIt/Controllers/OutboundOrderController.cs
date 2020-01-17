@@ -142,7 +142,6 @@ namespace ShipIt.Controllers
                 // make a new trck at the start of a new order 
                 trucks.Add(new Truck()
                 {
-                    CurrentWeightInGrams = 0,
                     Products = new List<Product>()
                 });
 
@@ -167,7 +166,6 @@ namespace ShipIt.Controllers
             Truck truck;
             trucks.Add(new Truck()
             {
-                CurrentWeightInGrams = 0,
                 Products = new List<Product>()
             });
             truck = trucks.Last();
