@@ -16,6 +16,8 @@ namespace ShipIt.Models.ApiModels
             Success = true;
         }
 
-        public EmployeeResponse() { }
+        public EmployeeResponse() 
+        { 
+        }
     }
 }
