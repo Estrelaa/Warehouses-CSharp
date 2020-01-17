@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Npgsql;
+using ShipIt.Models.ApiModels;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using Npgsql;
-using ShipIt.Models.ApiModels;
 
 namespace ShipIt.Models.DataModels
 {
@@ -79,10 +79,12 @@ namespace ShipIt.Models.DataModels
         public int MinimumOrderQuantity { get; set; }
 
         public ProductDataModel(IDataReader dataReader) : base(dataReader)
-        { }
+        { 
+        }
 
         public ProductDataModel()
-        { }
+        { 
+        }
 
         public ProductDataModel(Product apiModel)
         {
@@ -96,5 +98,4 @@ namespace ShipIt.Models.DataModels
             MinimumOrderQuantity = apiModel.MinimumOrderQuantity;
         }
     }
-
 }
