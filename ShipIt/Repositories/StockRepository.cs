@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using Npgsql;
+﻿using Npgsql;
 using ShipIt.Exceptions;
 using ShipIt.Models.ApiModels;
 using ShipIt.Models.DataModels;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ShipIt.Repositories
 {
@@ -53,11 +52,11 @@ namespace ShipIt.Repositories
         public Dictionary<int, StockDataModel> GetStockByWarehouseAndProductIds(int warehouseId, List<int> productIds)
         {
             string sql = string.Format("SELECT p_id, hld, w_id FROM stock WHERE w_id = @w_id AND p_id IN ({0})",
-                String.Join(",", productIds));
+                string.Join(",", productIds));
             var parameter = new NpgsqlParameter("@w_id", warehouseId);
             string noProductWithIdErrorMessage = string.Format("No stock found with w_id: {0} and p_ids: {1}",
-                warehouseId, String.Join(",", productIds));
-            var stock = base.RunGetQuery(sql, reader => new StockDataModel(reader), noProductWithIdErrorMessage, parameter);
+                warehouseId, string.Join(",", productIds));
+            var stock = RunGetQuery(sql, reader => new StockDataModel(reader), noProductWithIdErrorMessage, parameter);
             return stock.ToDictionary(s => s.ProductId, s => s);
         }
             
@@ -91,11 +90,10 @@ namespace ShipIt.Repositories
             {
                 if (recordsAffected[i] == 0)
                 {
-                    errorMessage = String.Format("Product {0} in warehouse {1} was unexpectedly not updated (rows updated returned {2})",
+                    errorMessage = string.Format("Product {0} in warehouse {1} was unexpectedly not updated (rows updated returned {2})",
                         parametersList[i][0], warehouseId, recordsAffected[i]);
                 }
             }
-
             if (errorMessage != null)
             {
                 throw new InvalidStateException(errorMessage);
@@ -116,8 +114,7 @@ namespace ShipIt.Repositories
                     new NpgsqlParameter("@p_id", lineItem.ProductId)
                 });
             }
-
-            base.RunTransaction(sql, parametersList);
+            RunTransaction(sql, parametersList);
         }
         public IEnumerable<StockDataModel> GetStock()
         {
@@ -125,13 +122,12 @@ namespace ShipIt.Repositories
             string noProduct = string.Format("No stock found");
             try
             {
-                return base.RunGetQuery(sql, reader => new StockDataModel(reader), noProduct).ToList();
+                return RunGetQuery(sql, reader => new StockDataModel(reader), noProduct).ToList();
             }
             catch (NoSuchEntityException)
             {
                 return new List<StockDataModel>();
             }
-
         }
         public List<RestockingDataModel> GetAllStockThatNeedRestocking(int warehouseID)
         {
