@@ -157,8 +157,7 @@ namespace ShipIt.Controllers
                     truck.Products.Add(product);
                     truck.CurrentWeightInGrams += product.Weight;
                 }          
-            }
-      
+            }    
             return trucks;
         }
         private static Truck CreateTruckAndUseIt(List<Truck> trucks)
