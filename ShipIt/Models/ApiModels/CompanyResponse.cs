@@ -9,6 +9,8 @@
             Success = true;
         }
 
-        public CompanyResponse() { }
+        public CompanyResponse() 
+        { 
+        }
     }
 }
