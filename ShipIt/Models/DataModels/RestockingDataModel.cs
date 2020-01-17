@@ -44,6 +44,5 @@ namespace ShipIt.Models.DataModels
         public RestockingDataModel(IDataReader dataReader) : base(dataReader)
         {
         }
-
     }
 }
