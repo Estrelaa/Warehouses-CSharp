@@ -30,7 +30,7 @@ namespace ShipIt.Repositories
                 "WHERE gcp_cd = @gcp_cd";
             var parameter = new NpgsqlParameter("@gcp_cd", gcp);
             string noProductWithIdErrorMessage = string.Format("No companies found with gcp: {0}", gcp);
-            return base.RunSingleGetQuery(sql, reader => new CompanyDataModel(reader), noProductWithIdErrorMessage, parameter);
+            return RunSingleGetQuery(sql, reader => new CompanyDataModel(reader), noProductWithIdErrorMessage, parameter);
         }
         public List<CompanyDataModel> GetAllCompanies()
         {
@@ -38,7 +38,7 @@ namespace ShipIt.Repositories
                 "SELECT *" +
                 "FROM gcp ";
             string noProductWithIdErrorMessage = string.Format("No companies found");
-            return base.RunGetQuery(sql, reader => new CompanyDataModel(reader), noProductWithIdErrorMessage).ToList();
+            return RunGetQuery(sql, reader => new CompanyDataModel(reader), noProductWithIdErrorMessage).ToList();
         }
 
         public void AddCompanies(IEnumerable<Company> companies)
@@ -53,9 +53,7 @@ namespace ShipIt.Repositories
                 var companyDataModel = new CompanyDataModel(company);
                 parametersList.Add(companyDataModel.GetNpgsqlParameters().ToArray());
             }
-
-            base.RunTransaction(sql, parametersList);
+            RunTransaction(sql, parametersList);
         }
     }
-
 }
