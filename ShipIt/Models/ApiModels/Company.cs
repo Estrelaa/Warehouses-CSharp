@@ -39,7 +39,6 @@ namespace ShipIt.Models.ApiModels
             {
                 return true;
             }
-
             if (!(obj is Company))
             {
                 return false;
