@@ -19,46 +19,45 @@ namespace ShipIt.Validators
 
         protected abstract void DoValidation(T target);
 
-        void addError(String error)
+        void AddError(String error)
         {
             errors.Add(error);
         }
 
-        void addErrors(List<String> errors)
+        void AddErrors(List<String> errors)
         {
             this.errors.AddRange(errors);
         }
 
-/**
- * Object validators
- */
+        /**
+         * Object validators
+         */
 
-        void assertNotNull(String fieldName, Object value)
+        void AssertNotNull(String fieldName, Object value)
         {
             if (value == null)
             {
-                addError(string.Format("Field {0} cannot be null", fieldName));
+                AddError(string.Format("Field {0} cannot be null", fieldName));
             }
         }
 
-/**
- * String validators
- */
+        /**
+         * String validators
+         */
 
-        protected void assertNotBlank(string fieldName, string value)
+        protected void AssertNotBlank(string fieldName, string value)
         {
             if (string.IsNullOrWhiteSpace(value))
             {
-                addError(string.Format("Field {0} cannot be blank", fieldName));
+                AddError(string.Format("Field {0} cannot be blank", fieldName));
             }
         }
 
         protected void AssertNumeric(string fieldName, string value)
         {
-            double d;
-            if (!double.TryParse(value, out d))
+            if (!double.TryParse(value, out double D))
             {
-                addError(string.Format("Field {0} must be numeric", fieldName));
+                AddError(string.Format("Field {0} must be numeric", fieldName));
             }
         }
 
@@ -66,7 +65,7 @@ namespace ShipIt.Validators
         {
             if (value.Length > maxLength)
             {
-                addError(string.Format("Field {0} must be shorter than {1} characters", fieldName, maxLength));
+                AddError(string.Format("Field {0} must be shorter than {1} characters", fieldName, maxLength));
             }
         }
 
@@ -74,19 +73,19 @@ namespace ShipIt.Validators
         {
             if (value.Length != exactLength)
             {
-                addError(string.Format("Field {0} must be exactly {1} characters", fieldName, exactLength));
+                AddError(string.Format("Field {0} must be exactly {1} characters", fieldName, exactLength));
             }
         }
 
-/**
- * Numeric validators
- */
+        /**
+         * Numeric validators
+         */
 
         protected void AssertNonNegative(string fieldName, int value)
         {
             if (value < 0)
             {
-                addError(string.Format("Field {0} must be non-negative", fieldName));
+                AddError(string.Format("Field {0} must be non-negative", fieldName));
             }
         }
 
@@ -94,24 +93,24 @@ namespace ShipIt.Validators
         {
             if (value < 0)
             {
-                addError(string.Format("Field {0} must be non-negative", fieldName));
+                AddError(string.Format("Field {0} must be non-negative", fieldName));
             }
         }
 
-/**
- * Specific validators
- */
+        /**
+         * Specific validators
+         */
 
         protected void ValidateGtin(string value)
         {
-            assertNotBlank("gtin", value);
+            AssertNotBlank("gtin", value);
             AssertNumeric("gtin", value);
             AssertMaxLength("gtin", value, 13);
         }
 
         protected void ValidateGcp(String value)
         {
-            assertNotBlank("gcp", value);
+            AssertNotBlank("gcp", value);
             AssertNumeric("gcp", value);
             AssertMaxLength("gcp", value, 13);
         }
@@ -120,25 +119,5 @@ namespace ShipIt.Validators
         {
             AssertNonNegative("warehouseId", warehouseId);
         }
-        /*
-    protected void validateOrderLines(List<OrderLine> orderLines)
-    {
-        Set<String> gtins = new HashSet<String>(orderLines.size());
-        for (OrderLine orderLine : orderLines)
-        {
-            OrderLineValidator orderLineValidator = new OrderLineValidator();
-            orderLineValidator.doValidation(orderLine);
-            addErrors(orderLineValidator.errors);
-
-            if (gtins.contains(orderLine.getGtin()))
-            {
-                addError(String.format("Order contains duplicate GTINs: {0}", orderLine.getGtin()));
-            }
-            else
-            {
-                gtins.add(orderLine.getGtin());
-            }
-        }
-    }*/
     }
 }

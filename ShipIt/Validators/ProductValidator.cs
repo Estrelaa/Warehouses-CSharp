@@ -6,7 +6,7 @@ namespace ShipIt.Validators
     {
         protected override void DoValidation(Product target)
         {
-        assertNotBlank("name", target.Name);
+        AssertNotBlank("name", target.Name);
         AssertMaxLength("name", target.Name, 255);
 
         ValidateGtin(target.Gtin);
