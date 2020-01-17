@@ -10,7 +10,10 @@ namespace ShipIt.Filters
     {
         public override void OnException(HttpActionExecutedContext context)
         {
-            if (!(context.Exception is ClientVisibleException)) return;
+            if (!(context.Exception is ClientVisibleException)) 
+            {
+                return;
+            }         
             var exception = (ClientVisibleException)context.Exception;
             var response = new ErrorResponse()
             {
